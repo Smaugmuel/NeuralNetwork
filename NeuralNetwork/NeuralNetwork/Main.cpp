@@ -43,9 +43,8 @@ int main()
 	/*
 	Neural network settings
 	*/
-	int nNeuronsPerLayer[] = { N_SENSORS * 2, 3 };
+	int nNeuronsPerLayer[] = { N_SENSORS * 2, 20, 10, 6, 3 };
 	int nLayers = sizeof(nNeuronsPerLayer) / sizeof(int);
-	static const unsigned int N_NETWORKS = 100U;
 
 	/*
 	Create games and networks
@@ -107,17 +106,6 @@ int main()
 		{
 			trainer.StartTraining(N_NETWORKS, networks, snakeGames, scores, trainingTime);
 			wasTraining = true;
-		}
-		
-		trainer.Update(dt);
-
-		// Check if there was a training that just ended
-		if (!trainer.IsTraining() && wasTraining)
-		{
-			trainer.Mutate();
-			trainingTime += 2.0f;
-			wasTraining = false;
-			trainer.StartTraining(N_NETWORKS, networks, snakeGames, scores, trainingTime);
 		}*/
 
 
@@ -127,7 +115,7 @@ int main()
 			trainer.StartTraining(N_NETWORKS, networks, snakeGames, scores, trainingTime);
 		}
 
-		trainer.Update(dt);
+		trainer.Update(2.0f * dt);
 
 		if (trainingInitiated && !trainer.IsTraining())
 		{

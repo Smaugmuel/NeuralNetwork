@@ -28,6 +28,11 @@ Neural network input settings
 #define SENSOR_END_ANGLE 3.14159265f * 2 / 3		// 120 degrees
 
 /*
+Neural network training settings
+*/
+#define N_NETWORKS 500U
+
+/*
 Neural netwok mutate settings
 */
 #define NETWORKS_TO_KEEP_PERCENT 0.25f

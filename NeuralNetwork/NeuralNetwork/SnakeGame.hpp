@@ -13,7 +13,7 @@ public:
 	SnakeGame();
 	~SnakeGame();
 
-	void Initialize(int nSensors, sf::Vector2f startPos = sf::Vector2f(WNDW / 5, WNDH / 2), sf::Vector2f startDir = sf::Vector2f(1, 0));
+	void Initialize(int nSensors, sf::Vector2f startPos = sf::Vector2f(WNDW / 2, WNDH / 2), sf::Vector2f startDir = sf::Vector2f(1, 0));
 	void ReInitialize();
 
 	void Update(float dt);
@@ -40,6 +40,9 @@ private:
 	sf::Vector2f m_movement;
 	float m_speed;
 	bool m_isAlive;
+
+	sf::Vector2f m_startPos;
+	sf::Vector2f m_startDir;
 
 	// Sensor variables
 	sf::Vector2f* m_sensorDirections;

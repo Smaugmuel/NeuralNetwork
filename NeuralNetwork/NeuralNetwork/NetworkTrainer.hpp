@@ -1,6 +1,8 @@
 #ifndef NETWORK_TRAINER_HPP
 #define NETWORK_TRAINER_HPP
 
+#define HARD_COPY_BEST
+
 class NeuralNetwork;
 class SnakeGame;
 
@@ -19,7 +21,7 @@ public:
 
 	void Update(float dt);
 
-	void ControlSnake(SnakeGame& snake, NeuralNetwork& network, float dt);
+	void ControlSnake(SnakeGame& snake, NeuralNetwork& network, int i, float dt);
 
 	bool IsTraining() const;
 
@@ -30,6 +32,8 @@ private:
 
 	NeuralNetwork * m_networks;
 	SnakeGame* m_snakes;
+	int* m_nLeftSteers;
+	int* m_nRightSteers;
 	int* m_scores;
 	int m_nNetworks;
 

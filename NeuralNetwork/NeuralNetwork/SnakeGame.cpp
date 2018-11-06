@@ -28,10 +28,15 @@ SnakeGame::~SnakeGame()
 
 void SnakeGame::Initialize(int nSensors, sf::Vector2f startPos, sf::Vector2f startDir)
 {
+	m_startPos = startPos;
+	m_startDir = startDir;
+
 	// Initialize snake
 	sf::CircleShape head(SNAKE_RADIUS);
 	head.setOrigin(sf::Vector2f(SNAKE_RADIUS, SNAKE_RADIUS));
 	head.setFillColor(sf::Color::Green);
+	head.setOutlineColor(sf::Color::Black);
+	head.setOutlineThickness(-1.0f);
 	head.setPosition(startPos);
 	m_bodyParts.push_back(head);
 
@@ -67,16 +72,40 @@ void SnakeGame::Initialize(int nSensors, sf::Vector2f startPos, sf::Vector2f sta
 	}
 
 	m_food.Initialize();
+	m_food.Respawn();
 }
 
 void SnakeGame::ReInitialize()
 {
-	delete[] m_sensorDirections;
-	delete[] m_sensorDistances;
-	delete[] m_sensorMarkers;
-	m_bodyParts.clear();
+	// Reset body
+	m_bodyParts.erase(m_bodyParts.begin() + 1, m_bodyParts.end());
+	m_bodyParts[0].setPosition(m_startPos);
+	m_movement = m_startDir;
+	m_isAlive = true;
 
-	Initialize(m_nSensors);
+	// Reset sensors
+	float angleIncrement = (SENSOR_END_ANGLE - SENSOR_START_ANGLE) / (m_nSensors - 1);
+	for (int i = 0; i < m_nSensors; i++)
+	{
+		float currentAngle = SENSOR_START_ANGLE + angleIncrement * i;
+		float sinv = std::sinf(currentAngle);
+		float cosv = std::cosf(currentAngle);
+
+		sf::Vector2f direction(
+			cosv * m_movement.x - sinv * m_movement.y,
+			sinv * m_movement.x + cosv * m_movement.y
+		);
+
+		m_sensorDirections[i] = direction;
+
+		float sensorRadius = 5.0f;
+		m_sensorMarkers[i].setRadius(sensorRadius);
+		m_sensorMarkers[i].setFillColor(sf::Color::Yellow);
+		m_sensorMarkers[i].setOrigin(sensorRadius, sensorRadius);
+	}
+
+	m_food.Initialize();
+	m_food.Respawn();
 }
 
 void SnakeGame::Update(float dt)
@@ -179,6 +208,8 @@ void SnakeGame::AddPart()
 
 	body.setOrigin(sf::Vector2f(SNAKE_RADIUS, SNAKE_RADIUS));
 	body.setFillColor(sf::Color::Green);
+	body.setOutlineColor(sf::Color::Black);
+	body.setOutlineThickness(-1.0f);
 	body.setPosition(m_bodyParts.back().getPosition());
 
 	m_bodyParts.push_back(body);
@@ -346,10 +377,10 @@ void SnakeGame::draw(sf::RenderTarget & target, sf::RenderStates states) const
 		target.draw(m_bodyParts[i], states);
 	}
 
-	for (int i = 0; i < m_nSensors; i++)
+	/*for (int i = 0; i < m_nSensors; i++)
 	{
 		target.draw(m_sensorMarkers[i], states);
-	}
+	}*/
 
 	target.draw(m_food, states);
 }
